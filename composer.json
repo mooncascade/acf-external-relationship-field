@@ -1,0 +1,13 @@
+{
+	"name" : "adaptive/acf-external-relationship",
+	"authors" : [{
+			"name" : "Mati Kärner",
+			"email" : "mati@adaptive.ee"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"WordPress\\ACF\\" : "src/classes"
+		}
+	}
+}
