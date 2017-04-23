@@ -18,7 +18,7 @@ module.exports = function (grunt) {
     },
 
     wp_readme_to_markdown : {
-      your_target : {
+      dist : {
         files : {
           'README.md' : 'readme.txt'
         }
@@ -46,6 +46,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
   grunt.registerTask('i18n', [ 'addtextdomain', 'makepot' ]);
   grunt.registerTask('readme', [ 'wp_readme_to_markdown' ]);
+
+  grunt.registerTask('default', [ 'wp_readme_to_markdown:dist' ]);
 
   grunt.util.linefeed = '\n';
 };
