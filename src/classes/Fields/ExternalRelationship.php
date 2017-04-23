@@ -81,7 +81,7 @@ class ExternalRelationship extends \acf_field {
 				self::NAME ), $args, $field, $post_id );
 
 		$args = apply_filters ( sprintf ( 'acf/fields/%s/query/name=%s',
-				self::NAME, $field ['name'] ), $args, $field, $post_id );
+				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $args, $field, $post_id );
 
 		$args = apply_filters ( sprintf ( 'acf/fields/%s/query/key=%s',
 				self::NAME, $field ['key'] ), $args, $field, $post_id );
@@ -97,7 +97,7 @@ class ExternalRelationship extends \acf_field {
 				self::NAME ), $result, $args );
 
 		$result = apply_filters ( sprintf ( 'acf/fields/%s/fetch/name=%s',
-				self::NAME, $field ['name'] ), $result, $args );
+				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $result, $args );
 
 		$result = apply_filters ( sprintf ( 'acf/fields/%s/fetch/key=%s',
 				self::NAME, $field ['key'] ), $result, $args );
@@ -112,7 +112,7 @@ class ExternalRelationship extends \acf_field {
 				self::NAME ), $types, $field );
 
 		$types = apply_filters ( sprintf ( 'acf/fields/%s/query_types/name=%s',
-				self::NAME, $field ['name'] ), $types, $field );
+				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $types, $field );
 
 		$types = apply_filters ( sprintf ( 'acf/fields/%s/query_types/key=%s',
 				self::NAME, $field ['key'] ), $types, $field );
@@ -127,7 +127,7 @@ class ExternalRelationship extends \acf_field {
 				self::NAME ), $field, $tags );
 
 		$tags = apply_filters ( sprintf ( 'acf/fields/%s/query_tags/name=%s',
-				self::NAME, $field ['name'] ), $field, $tags );
+				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $field, $tags );
 
 		$tags = apply_filters ( sprintf ( 'acf/fields/%s/query_tags/key=%s',
 				self::NAME, $field ['key'] ), $field, $tags );
@@ -148,7 +148,8 @@ class ExternalRelationship extends \acf_field {
 				self::NAME ), $title, $entity, $field, $post_id, $is_search );
 
 		$title = apply_filters ( sprintf ( 'acf/fields/%s/result/name=%s',
-				self::NAME, $field ['name'] ), $title, $entity, $field, $post_id, $is_search );
+				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), 
+				$title, $entity, $field, $post_id, $is_search );
 
 		$title = apply_filters ( sprintf ( 'acf/fields/%s/result/key=%s',
 				self::NAME, $field ['key'] ), $title, $entity, $field, $post_id, $is_search );
@@ -414,18 +415,16 @@ class ExternalRelationship extends \acf_field {
 		if (! empty ( $field ['value'] )) :
 		
 		// Get entities
-		$entitites = $this->get_entities ( array (
-				'IDs' => $field ['value'],
-				'type' => $field ['type'] 
+		$entities = $this->get_entities ( array (
+				'IDs' => $field ['value']
 		), $field );
-		
+
 		// Set choices
-		if (! empty ( $entitites )) :
-			foreach ( array_keys ( $entitites ) as $i ) :
+		if (! empty ( $entities )) :
+			foreach ( array_keys ( $entities ) as $i ) :
 				
 			// Vars
-			$entity = acf_extract_var ( $entitites, $i );
-				
+			$entity = $entities[$i];
 ?>
 	<li>
 		<input type="hidden"
@@ -552,8 +551,7 @@ class ExternalRelationship extends \acf_field {
 			
 			// Get entities
 			$value = $this->get_entities ( array (
-					'IDs' => $field ['value'],
-					'type' => $field ['type'] 
+					'IDs' => $field ['value']
 			), $field );
 		}
 		

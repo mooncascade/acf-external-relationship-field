@@ -12,7 +12,7 @@ require_once dirname ( __FILE__ ) . '/vendor/autoload.php';
  * Author URI:      https://adaptive.ee
  * Text Domain:     acf-external-relationship
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         1.1.0
  *
  * @package         WordPress\ACF
  */
