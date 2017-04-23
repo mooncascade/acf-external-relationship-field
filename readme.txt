@@ -1,10 +1,9 @@
 === Acf External Relationship ===
 Contributors: Mati Kärner
-Donate link: http://adaptive.ee
 Tags: ACF, AJAX
 Requires at least: 3.7
 Tested up to: 4.7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -37,9 +36,9 @@ How to install the plugin and get it working:
             $filter_pre = sprintf ( 'acf/fields/%s', 'external_relationship' );
             $filter_after = sprintf ( 'name=%s', $this->args ['name'] );
         
-            $tag = function ($name) use ($filter_pre, $filter_after) {
-                return sprintf ( '%s/%s/%s', $filter_pre, $name, $filter_after );
-            };
+            $tag = function ($name, $after = true) use ($filter_pre, $filter_after) {
+			    return sprintf ( '%s/%s%s', $filter_pre, $name, $after ? $filter_after : '' );
+		    };
 
             // Results
             add_filter ( $tag ( 'fetch' ), array (
@@ -53,14 +52,14 @@ How to install the plugin and get it working:
                     'getTitle'
             ), 10, 5 );
         
-            // Tags
-            add_filter ( $tag ( 'query_tags' ), array (
+            // Tags (no filter for name/key)
+            add_filter ( $tag ( 'query_tags', false ), array (
                     $this,
                     'getTags'
             ), 10, 2 );
         
-            // Types
-            add_filter ( $tag ( 'query_types' ), array (
+            // Types (no filter for name/key)
+            add_filter ( $tag ( 'query_types', false ), array (
                     $this,
                     'getTypes'
             ), 10, 2 );
@@ -118,6 +117,8 @@ How to install the plugin and get it working:
 An answer to that question.
 
 == Changelog ==
+= 1.2 =
+* Fixes for filters governing Types/Tags
 
 = 1.1 =
 * Fixes for various hooks

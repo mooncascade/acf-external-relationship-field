@@ -12,13 +12,13 @@ class ExternalRelationship extends \acf_field {
 		$this->label = __ ( 'External Relationship', self::TEXT_DOMAIN );
 		$this->category = 'relational';
 		$this->defaults = array (
-				'type' => array (),
+				'types' => array (),
 				'tags' => array (),
 				'min' => 0,
 				'max' => 0,
 				'filters' => array (
 						'search',
-						'type',
+						'types',
 						'tags'
 				),
 				'elements' => array (),
@@ -71,7 +71,7 @@ class ExternalRelationship extends \acf_field {
 		$args = array_merge ( array (
 				'posts_per_page' => - 1,
 				'paged' => 0,
-				'type' => 'post',
+				'types' => 'post',
 				'orderby' => 'title',
 				'order' => 'ASC'
 		), $args );
@@ -111,12 +111,6 @@ class ExternalRelationship extends \acf_field {
 		$types = apply_filters ( sprintf ( 'acf/fields/%s/query_types',
 				self::NAME ), $types, $field );
 
-		$types = apply_filters ( sprintf ( 'acf/fields/%s/query_types/name=%s',
-				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $types, $field );
-
-		$types = apply_filters ( sprintf ( 'acf/fields/%s/query_types/key=%s',
-				self::NAME, $field ['key'] ), $types, $field );
-
 		return $types;
 	}
 
@@ -124,13 +118,7 @@ class ExternalRelationship extends \acf_field {
 		$tags = array ();
 
 		$tags = apply_filters ( sprintf ( 'acf/fields/%s/query_tags',
-				self::NAME ), $field, $tags );
-
-		$tags = apply_filters ( sprintf ( 'acf/fields/%s/query_tags/name=%s',
-				self::NAME, isset($field ['_name']) ? $field ['_name'] : $field ['name'] ), $field, $tags );
-
-		$tags = apply_filters ( sprintf ( 'acf/fields/%s/query_tags/key=%s',
-				self::NAME, $field ['key'] ), $field, $tags );
+				self::NAME ), $tags, $field );
 
 		return $tags;
 	}
@@ -174,7 +162,7 @@ class ExternalRelationship extends \acf_field {
 				's' => '',
 				'field_key' => '',
 				'paged' => 1,
-				'type' => '',
+				'types' => '',
 				'tags' => ''
 		), $options );
 
@@ -200,10 +188,10 @@ class ExternalRelationship extends \acf_field {
 		}
 
 		// Type
-		if (! empty ( $options ['type'] )) {
-			$args ['type'] = acf_get_array ( $options ['type'] );
-		} elseif (! empty ( $field ['type'] )) {
-			$args ['type'] = acf_get_array ( $field ['type'] );
+		if (! empty ( $options ['types'] )) {
+			$args ['types'] = acf_get_array ( $options ['types'] );
+		} elseif (! empty ( $field ['types'] )) {
+			$args ['types'] = acf_get_array ( $field ['types'] );
 		}
 
 		// Tags
@@ -252,7 +240,7 @@ class ExternalRelationship extends \acf_field {
 		}
 
 		// Add as optgroup or results
-		if (count ( $args ['type'] ) == 1)
+		if (count ( $args ['types'] ) == 1)
 			$results = $results [0] ['children'];
 
 		$response = array (
@@ -272,7 +260,7 @@ class ExternalRelationship extends \acf_field {
 				'data-min' => $field ['min'],
 				'data-max' => $field ['max'],
 				'data-s' => '',
-				'data-type' => '',
+				'data-types' => '',
 				'data-tags' => '',
 				'data-paged' => 1
 		);
@@ -282,20 +270,20 @@ class ExternalRelationship extends \acf_field {
 			$atts ['data-lang'] = ICL_LANGUAGE_CODE;
 				
 		// Data types
-		$field ['type'] = acf_get_array ( $field ['type'] );
+		$field ['types'] = acf_get_array ( $field ['types'] );
 		$field ['tags'] = acf_get_array ( $field ['tags'] );
 
 		// Width for select filters
 		$width = array (
 				'search' => 0,
-				'type' => 0,
+				'types' => 0,
 				'tags' => 0
 		);
 
 		if (! empty ( $field ['filters'] )) {
 			$width = array (
 					'search' => 50,
-					'type' => 25,
+					'types' => 25,
 					'tags' => 25
 			);
 				
@@ -307,22 +295,22 @@ class ExternalRelationship extends \acf_field {
 				
 			// Search
 			if ($width ['search'] == 0) {
-				$width ['type'] = ($width ['type'] == 0) ? 0 : 50;
+				$width ['types'] = ($width ['types'] == 0) ? 0 : 50;
 				$width ['tags'] = ($width ['tags'] == 0) ? 0 : 50;
 			}
 				
 			// Type
-			if ($width ['type'] == 0) {
+			if ($width ['types'] == 0) {
 				$width ['tags'] = ($width ['tags'] == 0) ? 0 : 50;
 			}
 				
 			// Tags
 			if ($width ['tags'] == 0) {
-				$width ['type'] = ($width ['type'] == 0) ? 0 : 50;
+				$width ['types'] = ($width ['types'] == 0) ? 0 : 50;
 			}
 				
 			// Search
-			if ($width ['type'] == 0 && $width ['tags'] == 0) {
+			if ($width ['types'] == 0 && $width ['tags'] == 0) {
 				$width ['search'] = ($width ['search'] == 0) ? 0 : 100;
 			}
 		}
@@ -330,9 +318,9 @@ class ExternalRelationship extends \acf_field {
 		// Type filter
 		$types = array ();
 
-		if ($width ['type']) {
-			if (! empty ( $field ['type'] )) {
-				$types = $field ['type'];
+		if ($width ['types']) {
+			if (! empty ( $field ['types'] )) {
+				$types = $field ['types'];
 			}
 		}
 
@@ -350,7 +338,7 @@ class ExternalRelationship extends \acf_field {
 	<input type="hidden" name="<?php echo $field['name']; ?>" value="" />
 </div>
 	
-	<?php if( $width['search'] || $width['type'] || $width['tags'] ): ?>
+	<?php if( $width['search'] || $width['types'] || $width['tags'] ): ?>
 <div class="filters">
 
 <ul class="acf-hl">
@@ -364,10 +352,10 @@ class ExternalRelationship extends \acf_field {
 </li>
 	<?php endif; ?>
 	
-	<?php if( $width['type'] ): ?>
-	<li style="width:<?php echo $width['type']; ?>%;">
+	<?php if( $width['types'] ): ?>
+	<li style="width:<?php echo $width['types']; ?>%;">
 	<div class="inner">
-		<select class="filter" data-filter="type">
+		<select class="filter" data-filter="types">
 			<option value=""><?php _e('Select type','acf'); ?></option>
 			<?php foreach( $types as $k => $v ): ?>
 				<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
@@ -460,7 +448,7 @@ class ExternalRelationship extends \acf_field {
 				'label' => __ ( 'Filter by Type', self::TEXT_DOMAIN ),
 				'instructions' => '',
 				'type' => 'select',
-				'name' => 'type',
+				'name' => 'types',
 				'choices' => $this->get_types ( $field ),
 				'multiple' => 1,
 				'ui' => 1,
@@ -489,7 +477,7 @@ class ExternalRelationship extends \acf_field {
 				'name' => 'filters',
 				'choices' => array (
 						'search' => __ ( 'Search', self::TEXT_DOMAIN ),
-						'type' => __ ( 'Type', self::TEXT_DOMAIN ),
+						'types' => __ ( 'Types', self::TEXT_DOMAIN ),
 						'tags' => __ ( 'Tags', self::TEXT_DOMAIN ) 
 				) 
 		) );
