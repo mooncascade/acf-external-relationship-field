@@ -3,7 +3,7 @@
 **Tags:** ACF, AJAX  
 **Requires at least:** 3.7  
 **Tested up to:** 4.7.4  
-**Stable tag:** 1.2.0  
+**Stable tag:** 1.2.1  
 **License:** GPLv3 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-3.0.en.html  
 
@@ -11,7 +11,7 @@ Connect external entitites via ACF Relationship field
 
 ## Description ##
 
-Connect external entitites via ACF Relationship field. Tested with ACF 5.5.10.
+Connect external entitites via ACF Relationship field. Tested with ACF 5.5.* - 5.5.12.
 
 ## Installation ##
 
@@ -78,13 +78,7 @@ How to install the plugin and get it working:
 	        }
 	
 	        public function getEntities($entities, $args) {
-	            $result = $this->doQuery ( $args );
-	            
-	            if (isset ( $args ['IDs'] )) // Resolve form ID-s
-	                $entities = $result;
-	            else
-	                $entities [] = $result;  // Query
-	            
+	            $entities = $this->doQuery ( $args );
 	            return $entities;
 	        }
 	        
@@ -117,6 +111,9 @@ How to install the plugin and get it working:
 An answer to that question.
 
 ## Changelog ##
+### 1.2.1 ###
+* Fixes for filters governing Types
+
 ### 1.2 ###
 * Fixes for filters governing Types/Tags
 
